@@ -4,22 +4,15 @@ Containerised Node.js/Express API with automated CI/CD pipeline deployed to AWS 
 
 ## Architecture
 
-```
-Developer pushes to main branch
-         |
-         v
-   GitHub Actions (4 jobs)
-         |
-   1. test  ->  npm test (Jest + Supertest)
-         |
-   2. build ->  docker build (Alpine, non-root user)
-         |
-   3. push  ->  docker push to Docker Hub
-         |
-   4. deploy -> SSH into EC2 -> pull -> restart container
-         |
-         v
-   http://<ec2-public-ip>/health
+```mermaid
+graph TD
+    A[Push to main branch] --> B[GitHub Actions]
+    B --> C[Job 1: npm test]
+    C -->|Pass| D[Job 2: docker build]
+    D --> E[Job 3: docker push to Docker Hub]
+    E --> F[Job 4: SSH into EC2]
+    F --> G[docker pull & restart container]
+    G --> H[Live at http://51.20.115.96/health]
 ```
 
 ## Tech Stack
